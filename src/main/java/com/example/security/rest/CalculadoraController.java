@@ -35,7 +35,7 @@ public class CalculadoraController {
 		return a / b;
 	}
 	
-	@PostAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	@PostAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER')")
 	@GetMapping("multiply")
 	public double multiply(@RequestParam("a") double a, @RequestParam("b") double b) {
 		return a * b;

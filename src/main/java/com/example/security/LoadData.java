@@ -1,8 +1,5 @@
 package com.example.security;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,23 +18,35 @@ class LoadDataBase {
 			BCryptPasswordEncoder bCryptPasswordEncoder) {
 		return args -> {
 			
-			Role admin = new Role();
-			admin.setName("ADMIN");
-			roleRepository.save(admin);
+			Role adminRole = new Role();
+			adminRole.setName("ADMIN");
+			roleRepository.save(adminRole);
 			
-			Role customer = new Role();
-			customer.setName("USER");
-			roleRepository.save(customer);
+			Role viewerRole = new Role();
+			viewerRole.setName("VIEWER");
+			roleRepository.save(viewerRole);
+			
+			Role customerRole = new Role();
+			customerRole.setName("CUSTOMER");
+			roleRepository.save(customerRole);
 
-			List<Role> roles = new ArrayList<>();
-			roles.add(admin);
-			roles.add(customer);
+			User admin = new User();
+			admin.setUsername("admin");
+			admin.setPassword(bCryptPasswordEncoder.encode("12345"));
+			admin.addRole(adminRole);
+			userRepository.save(admin);
 			
-			User user = new User();
-			user.setUsername("pepito");
-			user.setPassword(bCryptPasswordEncoder.encode("12345"));
-			user.setRoles(roles);
-			userRepository.save(user);
+			User visitor = new User();
+			visitor.setUsername("visitor");
+			visitor.setPassword(bCryptPasswordEncoder.encode("12345"));
+			visitor.addRole(viewerRole);
+			userRepository.save(visitor);
+			
+			User customer = new User();
+			customer.setUsername("customer");
+			customer.setPassword(bCryptPasswordEncoder.encode("12345"));
+			customer.addRole(customerRole);
+			userRepository.save(customer);
 		};
 	}
 }

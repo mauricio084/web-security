@@ -9,6 +9,6 @@ import org.springframework.security.access.annotation.Secured;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Secured("ROLE_USER")
-public @interface isUser {
+@Secured("ROLE_CUSTOMER")
+public @interface isCustomer {
 }

@@ -1,5 +1,6 @@
 package com.example.security.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -19,7 +20,7 @@ public class User {
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	private List<Role> roles;
+	private List<Role> roles = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -44,5 +45,10 @@ public class User {
 	}
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public User addRole(Role role) {
+		getRoles().add(role);
+		return this;
 	}
 }
