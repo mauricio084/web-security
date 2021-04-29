@@ -1,5 +1,6 @@
 package com.example.security.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,11 +18,11 @@ import com.example.security.conf.jwt.JWTAuthorizationFilter;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
+	@Autowired
 	private UserDetailsService userDetailsService;
 	
-	public WebSecurity(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+	@Autowired
+	private MyAuthenticationProvider authenticationProvider;
 	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -46,7 +47,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+		//auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+		auth.authenticationProvider(authenticationProvider);
 	}
 	
 	@Bean
