@@ -1,15 +1,20 @@
 # web-security
 
-Proyecto que muestra como asegurar un API Rest con autenticación de usuarios y manejo de token JWT.
+Proyecto que muestra la menera de asegurar un API Rest con autenticación de usuarios y manejo de token JWT.
 
-Autenticación de usuarios.
-Generación del Token.
-Validación del Token.
-PasswordEncoder para codificación de contraseñas.
+El proyecto contiene:
+- Autenticación de usuarios.
+- Generación del Token.
+- Validación del Token.
+- PasswordEncoder para codificación de contraseñas.
 
-Datos de Login:
+
+Datos para probar el Login:
 POST: http://localhost:8080/login
+```
 {
 	"username": "pepito",
 	"password": "12345"
 }
+```
+
