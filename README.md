@@ -13,7 +13,7 @@ Datos para probar el Login:
 POST: http://localhost:8080/login
 ```
 {
-	"username": "pepito",
+	"username": "admin",
 	"password": "12345"
 }
 ```
