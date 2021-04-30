@@ -18,6 +18,7 @@ public class User {
 	private Long id;
 	private String username;
 	private String password;
+	private boolean activo = true;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Role> roles = new ArrayList<>();
@@ -39,6 +40,12 @@ public class User {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public boolean isActivo() {
+		return activo;
+	}
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 	public List<Role> getRoles() {
 		return roles;

@@ -40,7 +40,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider{
 			throw new UsernameNotFoundException(username);
 		}
         
-        if (encoder.matches(password, usuario.getPassword())){
+        if (encoder.matches(password, usuario.getPassword()) && usuario.isActivo()){
         	
         	List<SimpleGrantedAuthority> roles = getRoles(usuario);
 

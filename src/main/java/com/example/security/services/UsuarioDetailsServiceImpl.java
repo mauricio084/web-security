@@ -3,6 +3,8 @@ package com.example.security.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +22,8 @@ public class UsuarioDetailsServiceImpl implements UserDetailsService {
 	public UsuarioDetailsServiceImpl(UserRepository usuarioRepository) {
 		this.usuarioRepository = usuarioRepository;
 	}
-
+	
+	@Transactional
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User usuario = usuarioRepository.findByUsername(username);
