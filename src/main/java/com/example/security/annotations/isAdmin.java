@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.security.access.annotation.Secured;
 
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Secured("ROLE_ADMIN")
 public @interface isAdmin {

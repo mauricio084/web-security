@@ -33,19 +33,19 @@ class LoadDataBase {
 			User admin = new User();
 			admin.setUsername("admin");
 			admin.setPassword(bCryptPasswordEncoder.encode("12345"));
-			admin.addRole(adminRole);
+			admin.setRol(adminRole);
 			userRepository.save(admin);
 			
 			User visitor = new User();
 			visitor.setUsername("visitor");
 			visitor.setPassword(bCryptPasswordEncoder.encode("12345"));
-			visitor.addRole(viewerRole);
+			visitor.setRol(viewerRole);
 			userRepository.save(visitor);
 			
 			User customer = new User();
 			customer.setUsername("customer");
 			customer.setPassword(bCryptPasswordEncoder.encode("12345"));
-			customer.addRole(customerRole);
+			customer.setRol(customerRole);
 			userRepository.save(customer);
 		};
 	}

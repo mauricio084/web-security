@@ -1,14 +1,11 @@
 package com.example.security.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class User {
@@ -20,8 +17,8 @@ public class User {
 	private String password;
 	private boolean activo = true;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	private List<Role> roles = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Role rol;
 	
 	public Long getId() {
 		return id;
@@ -47,15 +44,10 @@ public class User {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	public List<Role> getRoles() {
-		return roles;
+	public Role getRol() {
+		return rol;
 	}
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-	
-	public User addRole(Role role) {
-		getRoles().add(role);
-		return this;
+	public void setRol(Role rol) {
+		this.rol = rol;
 	}
 }

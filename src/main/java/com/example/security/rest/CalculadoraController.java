@@ -1,9 +1,6 @@
 package com.example.security.rest;
 
-import javax.annotation.security.RolesAllowed;
-
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,21 +18,20 @@ public class CalculadoraController {
 		return a + b;
 	}
 	
-	@RolesAllowed("ROLE_ADMIN")
+	@Secured("ROLE_ADMIN")
 	@GetMapping("substract")
 	public double substract(@RequestParam("a") double a, @RequestParam("b") double b) {
 		return a - b;
 	}
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN') and #b != 0")
-	@PostAuthorize("returnObject > 1")
+	@Secured("ROLE_ADMIN")
 	@GetMapping("divide")
 	public double divide(@RequestParam("a") double a, 
 			@RequestParam("b") double b) {
 		return a / b;
 	}
 	
-	@PostAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER')")
+	@Secured("ROLE_ADMIN")
 	@GetMapping("multiply")
 	public double multiply(@RequestParam("a") double a, @RequestParam("b") double b) {
 		return a * b;

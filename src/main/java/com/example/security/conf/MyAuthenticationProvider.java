@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.example.security.model.Role;
 import com.example.security.model.User;
 import com.example.security.repositories.UserRepository;
 
@@ -42,16 +41,16 @@ public class MyAuthenticationProvider implements AuthenticationProvider{
         
         if (encoder.matches(password, usuario.getPassword()) && usuario.isActivo()){
         	
-        	List<SimpleGrantedAuthority> roles = getRoles(usuario);
+        	List<SimpleGrantedAuthority> authorities = getAuthorities(usuario);
 
     		// Crea el objeto principal
 			org.springframework.security.core.userdetails.User principal = 
 					new org.springframework.security.core.userdetails.User(
 							usuario.getUsername(), 
 							usuario.getPassword(), 
-							roles);
+							authorities);
     				
-        	return new UsernamePasswordAuthenticationToken(principal, null, roles);
+        	return new UsernamePasswordAuthenticationToken(principal, null, authorities);
         }
         
 		return null;
@@ -62,14 +61,10 @@ public class MyAuthenticationProvider implements AuthenticationProvider{
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 	
-	private List<SimpleGrantedAuthority> getRoles(User usuario) {
-		List<SimpleGrantedAuthority> roles = new ArrayList<>();
-		
-		for (Role role : usuario.getRoles()) {
-			roles.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
-		}
-		
-		return roles;
+	private List<SimpleGrantedAuthority> getAuthorities(User usuario) {
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_"+usuario.getRol().getName()));
+		return authorities;
 	}
 
 }
