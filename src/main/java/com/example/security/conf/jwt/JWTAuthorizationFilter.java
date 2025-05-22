@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +18,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys; // Added
+import java.nio.charset.StandardCharsets; // Added
+import javax.crypto.SecretKey; // Added
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -29,7 +32,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 		String header = req.getHeader("Authorization");
-		if (header == null || !header.startsWith("Bearer")) {
+		if (header == null || !header.startsWith("Bearer ")) {
 			chain.doFilter(req, res);
 			return;
 		}
@@ -41,21 +44,40 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
 		if (token != null) {
-			// Se procesa el token y se recupera el usuario.
-			Claims body = Jwts.parser()
-						.setSigningKey("12345")
-						.parseClaimsJws(token.replace("Bearer ", ""))
-						.getBody();
+			SecretKey key = Keys.hmacShaKeyFor("ThisIsA32ByteSecretKeyForHS256validation!".getBytes(StandardCharsets.UTF_8));
 			
-			String user = body.getSubject();
+			try {
+				Claims body = Jwts.parser() // Corrected: Jwts.parser() returns JwtParserBuilder
+							.setSigningKey(key)
+							.build()
+							.parseClaimsJws(token.replace("Bearer ", ""))
+							.getBody();
+				
+				String user = body.getSubject();
 
-			if (user != null) {
-				final Collection<SimpleGrantedAuthority> authorities =
-						Arrays.stream(body.get("Authorities").toString().split(","))
+				if (user != null) {
+					Object authoritiesObj = body.get("Authorities");
+					Collection<SimpleGrantedAuthority> authorities = null;
+					if (authoritiesObj instanceof String) {
+						authorities = Arrays.stream(((String) authoritiesObj).split(","))
 								.map(SimpleGrantedAuthority::new)
 								.collect(Collectors.toList());
-				
-				return new UsernamePasswordAuthenticationToken(user, null, authorities);
+					} else if (authoritiesObj instanceof Collection) {
+						authorities = ((Collection<?>) authoritiesObj).stream()
+								.map(Object::toString)
+								.map(SimpleGrantedAuthority::new)
+								.collect(Collectors.toList());
+					}
+					
+					if (authorities == null) {
+						authorities = Arrays.asList(); 
+					}
+
+					return new UsernamePasswordAuthenticationToken(user, null, authorities);
+				}
+			} catch (Exception e) {
+				SecurityContextHolder.clearContext(); 
+				return null;
 			}
 			return null;
 		}
